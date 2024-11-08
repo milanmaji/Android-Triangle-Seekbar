@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Sample</string>
+    <string name="staircase_style">Staircase Style</string>
+    <string name="normal_style">Normal Style</string>
+    <string name="show_progress_text_on_it">Show progress text on it</string>
+    <string name="hide_progress_text_on_it">Hide progress text on it</string>
+    <string name="color_seekbar_progress_to_random_color">Color Seekbar progress to random color</string>
+    <string name="color_seekbar_to_random_color">Color Seekbar to random color</string>
+    <string name="current_progress_is">Current progress is %.2f</string>
+</resources>

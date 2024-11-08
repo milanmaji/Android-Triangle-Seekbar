@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.github.milanmaji.triangleseekbar.TriangleSeekbar
+        android:id="@+id/triangleSeekbarStaircase"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:maxValue="100"
+        app:minValue="0"
+        app:progress="50"
+        app:progressTextPosition="center"
+        app:seekbarColor="@color/colorPrimary"
+        app:seekbarLoadingColor="@color/colorAccent"
+        app:showProgress="true"
+        app:stairBarLineWidth="5"
+        app:staircaseStyle="true"
+        app:textColor="#9C27B0"
+        app:textFontSize="48sp" />
+
+    <TextView
+        android:id="@+id/tvStaircase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/staircase_style"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/triangleSeekbarStaircase" />
+
+
+    <com.github.milanmaji.triangleseekbar.TriangleSeekbar
+        android:id="@+id/triangleSeekbar"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvStaircase"
+        app:maxValue="100"
+        app:minValue="0"
+        app:progress="50"
+        app:progressTextPosition="center"
+        app:seekbarColor="@color/colorPrimary"
+        app:seekbarLoadingColor="@color/colorAccent"
+        app:showProgress="true"
+        app:staircaseStyle="false"
+        app:textColor="#fff"
+        app:textFontSize="48sp" />
+
+    <TextView
+        android:id="@+id/tvNormal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/normal_style"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/triangleSeekbar" />
+
+    <TextView
+        android:id="@+id/tvCurrentProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/current_progress_is"
+        android:textAllCaps="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvNormal" />
+
+    <Button
+        android:id="@+id/btnMakeSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:text="@string/color_seekbar_to_random_color"
+        app:layout_constraintBottom_toTopOf="@id/btnMakeProgress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCurrentProgress"
+        app:layout_constraintVertical_chainStyle="spread" />
+
+
+    <Button
+        android:id="@+id/btnMakeProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:text="@string/color_seekbar_progress_to_random_color"
+        app:layout_constraintBottom_toTopOf="@id/btnShowProgress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnMakeSeekBar" />
+
+    <Button
+        android:id="@+id/btnShowProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:text="@string/show_progress_text_on_it"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnMakeProgress" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
