@@ -24,8 +24,8 @@
         app:seekbarColor="@color/colorPrimary"
         app:seekbarLoadingColor="@color/colorAccent"
         app:showProgress="true"
-        app:stairBarLineWidth="5"
-        app:staircaseStyle="true"
+        app:stairBarLineWidth="10"
+        app:barStyle="stair"
         app:textColor="#9C27B0"
         app:textFontSize="48sp" />
 
@@ -59,7 +59,7 @@
         app:seekbarColor="@color/colorPrimary"
         app:seekbarLoadingColor="@color/colorAccent"
         app:showProgress="true"
-        app:staircaseStyle="false"
+        app:barStyle="fill"
         app:textColor="#fff"
         app:textFontSize="48sp" />
 

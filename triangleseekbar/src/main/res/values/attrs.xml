@@ -8,7 +8,6 @@
         <attr name="textFontName" format="string"/>
         <attr name="textFontSize" format="dimension"/>
         <attr name="showProgress" format="boolean"/>
-        <attr name="staircaseStyle" format="boolean"/>
         <attr name="stairBarLineWidth" format="float"/>
         <attr name="minValue" format="float"/>
         <attr name="maxValue" format="float"/>
@@ -19,6 +18,10 @@
             <enum name="bottomLeft" value="2"/>
             <enum name="bottomRight" value="3"/>
             <enum name="center" value="4"/>
+        </attr>
+        <attr name="barStyle" format="enum">
+            <enum name="fill" value="0"/>
+            <enum name="stair" value="1"/>
         </attr>
 
         <attr name="progress" format="float"/>

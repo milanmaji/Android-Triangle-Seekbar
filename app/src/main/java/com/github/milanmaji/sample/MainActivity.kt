@@ -2,6 +2,7 @@ package com.github.milanmaji.sample
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -12,6 +13,8 @@ import java.util.Random
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private var isSyncing = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -28,32 +31,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun init() {
         with(binding) {
-            triangleSeekbar.setProgressListener(
-                object : TriangleSeekbar.ProgressListener {
-                    override fun onProgressChange(progress: Float) {
-                        triangleSeekbarStaircase.setProgress(progress)
-                        tvCurrentProgress.text = getString(R.string.current_progress_is, progress)
-                    }
-
-                }
-            )
-
-            triangleSeekbarStaircase.setProgressListener(
-                object : TriangleSeekbar.ProgressListener {
-                    override fun onProgressChange(progress: Float) {
-                        triangleSeekbar.setProgress(progress)
-                    }
-
-                }
-            )
-
-
+           setupSeekBarSync(triangleSeekbar,triangleSeekbarStaircase)
+           setupSeekBarSync(triangleSeekbarStaircase,triangleSeekbar)
 
             btnMakeSeekBar.setOnClickListener {
                 val rnd = Random()
                 val color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
 
-                triangleSeekbar.setSeekBarColor(color)
+                triangleSeekbar.seekbarColor = color
+                triangleSeekbarStaircase.seekbarColor = color
             }
 
 
@@ -62,10 +48,12 @@ class MainActivity : AppCompatActivity() {
                 val color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
 
                 triangleSeekbar.seekbarLoadingColor = color
+                triangleSeekbarStaircase.seekbarLoadingColor = color
             }
 
             btnShowProgress.setOnClickListener {
                 triangleSeekbar.isProgressVisible = !triangleSeekbar.isProgressVisible
+                triangleSeekbarStaircase.isProgressVisible = !triangleSeekbarStaircase.isProgressVisible
                 if (triangleSeekbar.isProgressVisible) {
                     btnShowProgress.text = getString(R.string.hide_progress_text_on_it)
                 } else {
@@ -73,5 +61,22 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun setupSeekBarSync(seekBar: TriangleSeekbar, otherSeekBar: TriangleSeekbar) {
+        seekBar.setProgressListener(
+            object : TriangleSeekbar.ProgressListener {
+                override fun onProgressChange(progress: Float) {
+                    binding.tvCurrentProgress.text = getString(R.string.current_progress_is, progress)
+                    Log.d("tag","triangleSeekbar:$progress")
+                    if (!isSyncing) {
+                        isSyncing = true
+                        otherSeekBar.setProgress(progress)
+                        isSyncing = false
+                    }
+                }
+
+            }
+        )
     }
 }

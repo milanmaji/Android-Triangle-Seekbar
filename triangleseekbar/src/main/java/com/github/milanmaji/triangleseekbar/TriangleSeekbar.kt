@@ -19,6 +19,9 @@ class TriangleSeekbar : View, View.OnTouchListener {
     enum class Position {
         TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT, CENTER
     }
+    enum class BarStyle{
+        FILL, STAIR
+    }
 
     interface ProgressListener {
         fun onProgressChange(progress: Float)
@@ -43,37 +46,22 @@ class TriangleSeekbar : View, View.OnTouchListener {
     private val mTextPaint = Paint()
     private val mSeekbarPaint = Paint()
     private val mSeekbarLoadingPaint = Paint()
+    private val mStairSpacePaint = Paint()
 
     private val mSeekbarPath = Path()
     private val mSeekbarLoadingPath = Path()
 
     private var mTextColor = 0
-    var seekbarColor: Int = 0
-        private set
-    var stairSpaceColor: Int = 0
-        private set
+    private var mSeekbarColor: Int = 0
+    private var mStairSpaceColor: Int = 0
     private var mSeekbarLoadingColor = 0
 
     private var mIsProgressVisible = false
-    private var mIsStaircaseStyle = false
-    private var isLayoutComplete = false
+    private var mBarStyle = BarStyle.FILL
 
     private var mFontName: String? = null
 
     private var mTextSize = 96f
-
-    var progressvalue: Float = 0.0f
-        private set
-    var minValue: Float = 0.0f
-        set(value) {
-            field = value
-            invalidate()
-        }
-    var maxValue: Float = 0.0f
-        set(value) {
-            field = value
-            invalidate()
-        }
 
 
     constructor(context: Context?) : super(context) {
@@ -85,7 +73,7 @@ class TriangleSeekbar : View, View.OnTouchListener {
 
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.TriangleSeekbar)
 
-        seekbarColor =
+        mSeekbarColor =
             typedArray.getColor(
                 R.styleable.TriangleSeekbar_seekbarColor,
                 ContextCompat.getColor(context, R.color.seekbarPrimary)
@@ -95,7 +83,7 @@ class TriangleSeekbar : View, View.OnTouchListener {
                 R.styleable.TriangleSeekbar_seekbarLoadingColor,
                 ContextCompat.getColor(context, R.color.seekbarPrimaryDark)
             )
-        stairSpaceColor =
+        mStairSpaceColor =
             typedArray.getColor(
                 R.styleable.TriangleSeekbar_stairSpaceColor,
                 ContextCompat.getColor(context, R.color.transparent)
@@ -109,8 +97,8 @@ class TriangleSeekbar : View, View.OnTouchListener {
 
 
         mIsProgressVisible = typedArray.getBoolean(R.styleable.TriangleSeekbar_showProgress, false)
-        mIsStaircaseStyle =
-            typedArray.getBoolean(R.styleable.TriangleSeekbar_staircaseStyle, false)
+        mBarStyle =
+            BarStyle.entries[typedArray.getInt(R.styleable.TriangleSeekbar_barStyle, 0)]
 
         mProgressPosition =
             Position.entries[typedArray.getInt(R.styleable.TriangleSeekbar_progressTextPosition, 4)]
@@ -122,9 +110,10 @@ class TriangleSeekbar : View, View.OnTouchListener {
         maxValue = typedArray.getFloat(R.styleable.TriangleSeekbar_maxValue, 100f)
         mStairBarLineWidth = typedArray.getFloat(R.styleable.TriangleSeekbar_stairBarLineWidth, 6f)
 
-        mSeekbarPaint.color = seekbarColor
+        mSeekbarPaint.color = mSeekbarColor
         mSeekbarLoadingPaint.color = mSeekbarLoadingColor
         mTextPaint.color = mTextColor
+        mStairSpacePaint.color = mStairSpaceColor
 
         mTextPaint.textSize = mTextSize
         if (mFontName != null) {
@@ -151,7 +140,6 @@ class TriangleSeekbar : View, View.OnTouchListener {
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-        isLayoutComplete = true
         mSeekbarPath.moveTo(mWidth.toFloat(), 0f)
         mSeekbarPath.lineTo(mWidth.toFloat(), mHeight.toFloat())
         mSeekbarPath.lineTo(0f, mHeight.toFloat())
@@ -172,7 +160,7 @@ class TriangleSeekbar : View, View.OnTouchListener {
                     x = mWidth.toFloat()
                 }
 
-                buildLoadingTriangle(x,mProgressListener)
+                buildLoadingTriangle(x)
             }
         }
         invalidate()
@@ -182,11 +170,14 @@ class TriangleSeekbar : View, View.OnTouchListener {
     @Synchronized
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        if(mIsStaircaseStyle)
-            drawBackgroundVerticalLines(canvas)
-        else{
-            canvas.drawPath(mSeekbarPath, mSeekbarPaint)
-            canvas.drawPath(mSeekbarLoadingPath, mSeekbarLoadingPaint)
+        when(mBarStyle){
+            BarStyle.FILL -> {
+                canvas.drawPath(mSeekbarPath, mSeekbarPaint)
+                canvas.drawPath(mSeekbarLoadingPath, mSeekbarLoadingPaint)
+            }
+            BarStyle.STAIR -> {
+                drawBackgroundVerticalLines(canvas)
+            }
         }
         if (mIsProgressVisible) {
             val mPercentage = (progressvalue - minValue) / (maxValue - minValue)
@@ -210,7 +201,7 @@ class TriangleSeekbar : View, View.OnTouchListener {
         var isBackgroundColor = false // Alternating flag for line color
         while (currentX >= 0) { // Draw lines from right to left
             linePaint.color = if (isBackgroundColor) {
-                stairSpaceColor
+                mStairSpacePaint.color
             } else if (currentX <= mLoadedWidth) {
                 mSeekbarLoadingPaint.color
             } else {
@@ -238,8 +229,7 @@ class TriangleSeekbar : View, View.OnTouchListener {
     }
 
 
-    private fun buildLoadingTriangle(motionX: Float, listener: ProgressListener?) {
-        if(!isLayoutComplete) return
+    private fun buildLoadingTriangle(motionX: Float) {
         mSeekbarLoadingPath.reset()
         var hypotenuse = sqrt((mHeight * mHeight + mWidth * mWidth).toDouble())
         val sinA = mHeight / hypotenuse
@@ -252,8 +242,8 @@ class TriangleSeekbar : View, View.OnTouchListener {
         mSeekbarLoadingPath.lineTo(mLoadedWidth.toFloat(), mHeight.toFloat())
         mSeekbarLoadingPath.lineTo(mLoadedWidth.toFloat(), ((mHeight - mLoadedHeight).toFloat()))
 
-        progressvalue = calculateProgressValue()
-        listener?.onProgressChange((progressvalue))
+        progressvalue = calculatePercentage()
+        mProgressListener?.onProgressChange((progressvalue))
 
         setProgressPosition(mProgressPosition)
     }
@@ -315,7 +305,7 @@ class TriangleSeekbar : View, View.OnTouchListener {
         }
     }*/
 
-    private fun calculateProgressValue(): Float {
+    private fun calculatePercentage(): Float {
         val totalLines = (( mWidth.toFloat() / mStairBarLineWidth)/2).plus(1).toInt() // Total number of lines
         val loadedLines = ((mLoadedWidth.toFloat() / mStairBarLineWidth)/2).plus(1).toInt() // Total number of loaded lines
 
@@ -326,7 +316,7 @@ class TriangleSeekbar : View, View.OnTouchListener {
         }else if(mLoadedWidth<=0) {
             0.0
         }else {
-            rawPercentage.coerceAtMost(0.99)
+            rawPercentage.coerceAtMost(1.0)
         }
         // Scale the raw percentage to the specified range
         val scaledPercentage = minValue + (adjustedPercentage * (maxValue - minValue))
@@ -336,25 +326,38 @@ class TriangleSeekbar : View, View.OnTouchListener {
     }
 
     fun setProgress(progress: Float) {
-        if (progress in minValue..maxValue) {
-            progressvalue = progress
-            val normalizedProgress = (progress - minValue) / (maxValue - minValue)
 
-            // Calculate the total number of vertical lines
-            val totalLines = ((mWidth.toFloat() / mStairBarLineWidth) / 2).plus(1).toInt()
+        require(progress in minValue..maxValue) { "Value must be between $minValue and $maxValue" }
 
-            // Calculate how many lines should be loaded based on the normalized progress
-            val loadedLines = (totalLines * normalizedProgress).toInt()
+        progressvalue = progress
+        val normalizedProgress = (progress - minValue) / (maxValue - minValue)
 
-            // Calculate the new width based on the number of loaded lines
-            val newWidth = loadedLines * mStairBarLineWidth * 2
-            buildLoadingTriangle(ceil(newWidth),null) // progress listener hit on touch event
+        // Calculate the total number of vertical lines
+        val totalLines = ((mWidth.toFloat() / mStairBarLineWidth) / 2).plus(1).toInt()
+
+        // Calculate how many lines should be loaded based on the normalized progress
+        val loadedLines = (totalLines * normalizedProgress).toInt()
+
+        // Calculate the new width based on the number of loaded lines
+        val newWidth = loadedLines * mStairBarLineWidth * 2
+        buildLoadingTriangle(ceil(newWidth)) // progress listener hit on touch event
+        invalidate()
+    }
+
+    var progressvalue: Float = 0.0f
+        private set
+    var minValue: Float = 0.0f
+        set(value) {
+            require(value < maxValue) { "minValue must be less than maxValue" }
+            field = value
             invalidate()
         }
-        else {
-            throw IllegalArgumentException("Value must be between $minValue and $maxValue")
+    var maxValue: Float = 100.0f
+        set(value) {
+            require(minValue < value) { "maxValue must be greater than minValue" }
+            field = value
+            invalidate()
         }
-    }
 
     var textColor: Int
         get() = mTextColor
@@ -364,18 +367,27 @@ class TriangleSeekbar : View, View.OnTouchListener {
             invalidate()
         }
 
-    fun setSeekBarColor(color: Int) {
-        this.seekbarColor = color
-        mSeekbarPaint.color = seekbarColor
-        invalidate()
-    }
-
+    var stairSpaceColor:Int
+        get() = mStairSpaceColor
+        set(color) {
+            this.mStairSpaceColor = color
+            mStairSpacePaint.color = mStairSpaceColor
+            invalidate()
+        }
 
     var seekbarLoadingColor: Int
         get() = mSeekbarLoadingColor
         set(color) {
             this.mSeekbarLoadingColor = color
             mSeekbarLoadingPaint.color = mSeekbarLoadingColor
+            invalidate()
+        }
+
+    var seekbarColor:Int
+        get() = mSeekbarColor
+        set(color) {
+            this.mSeekbarColor = color
+            mSeekbarPaint.color = mSeekbarColor
             invalidate()
         }
 
@@ -393,9 +405,16 @@ class TriangleSeekbar : View, View.OnTouchListener {
             this.mTextSize = mTextSize
             invalidate()
         }
+    var barStyle: BarStyle
+        get() = mBarStyle
+        set(mBarStyle) {
+            this.mBarStyle = mBarStyle
+            invalidate()
+        }
 
     fun setProgressListener(mProgressListener: ProgressListener?) {
         this.mProgressListener = mProgressListener
+        this.mProgressListener?.onProgressChange(progressvalue)
     }
 
     var fontName: String?
