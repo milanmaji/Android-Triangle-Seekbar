@@ -1,17 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="TriangleSeekbar">
+        <!-- Color of the SeekBar -->
         <attr name="seekbarColor" format="color"/>
+
+        <!-- Color of the SeekBar when it is in loading state -->
         <attr name="seekbarLoadingColor" format="color"/>
+
+        <!-- Color of the space between stair bars when the stair style is used -->
         <attr name="stairSpaceColor" format="color"/>
+
+        <!-- Color of the text displayed on the SeekBar -->
         <attr name="textColor" format="color"/>
+
+        <!-- Font name for the text displayed on the SeekBar -->
         <attr name="textFontName" format="string"/>
+
+        <!-- Font size for the text displayed on the SeekBar -->
         <attr name="textFontSize" format="dimension"/>
+
+        <!-- Whether to display progress text or not (true/false) -->
         <attr name="showProgress" format="boolean"/>
+
+        <!-- Width of the lines in the stair bar style -->
         <attr name="stairBarLineWidth" format="float"/>
+
+        <!-- Minimum value for the progress (should be less than maxValue) -->
         <attr name="minValue" format="float"/>
+
+        <!-- Maximum value for the progress (should be greater than minValue) -->
         <attr name="maxValue" format="float"/>
 
+        <!-- Position of the progress text on the SeekBar -->
         <attr name="progressTextPosition" format="enum">
             <enum name="topLeft" value="0"/>
             <enum name="topRight" value="1"/>
@@ -19,11 +39,14 @@
             <enum name="bottomRight" value="3"/>
             <enum name="center" value="4"/>
         </attr>
+
+        <!-- Style of the SeekBar (either 'fill' or 'stair') -->
         <attr name="barStyle" format="enum">
             <enum name="fill" value="0"/>
             <enum name="stair" value="1"/>
         </attr>
 
+        <!-- Current progress value of the SeekBar -->
         <attr name="progress" format="float"/>
 
 
