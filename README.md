@@ -1,12 +1,12 @@
 
-# Android-Triangle-Seekbar
+# Android Triangle Seekbar
 
 A simple, lightweight, and customizable Triangle SeekBar library for Android. This library offers a unique triangular progress bar style and now includes an additional Stair Style Bar for more flexibility.
 
+[![](https://jitpack.io/v/milanmaji/android-triangle-seekbar.svg)](https://jitpack.io/#milanmaji/android-triangle-seekbar)
+
 
 ![Triangle Seekbar Demo](triangleseekbar_demo.gif)
-
-[![](https://jitpack.io/v/milanmaji/Android-Triangle-Seekbar.svg)](https://jitpack.io/#milanmaji/Android-Triangle-Seekbar)
 
 
 ## Features
@@ -37,20 +37,20 @@ A simple, lightweight, and customizable Triangle SeekBar library for Android. Th
 
 ## Installation
 
-Add it in your root build.gradle at the end of repositories:
+Add it in `settings.gradle.kts`:
 ``` gradle
-	allprojects {
+	dependencyResolutionManagement {
 		repositories {
 			...
-			maven { url 'https://jitpack.io' }
+			maven(url = "https://jitpack.io")
 		}
 	}
 ```
-Add the dependency
+and then add dependency in `build.gradle.kts`
 
 ``` gradle
 	dependencies {
-	        implementation 'com.github.milanmaji:android-triangle_seekbar:latest.version'
+	        implementation("com.github.milanmaji:android-triangle-seekbar:latest.version")
 	}
 ```
 
